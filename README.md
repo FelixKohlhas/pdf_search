@@ -2,7 +2,7 @@
 
 # PDF Search
 
-*Web interface for searching content in PDF files*
+*Web interface for searching PDF files by their content*
 
 <img src="https://github.com/FelixKohlhas/pdf_search/assets/18424307/6014cb85-703f-4adb-9431-bc1b0e246f6a" width="75%">
 
