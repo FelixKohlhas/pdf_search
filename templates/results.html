@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta name="viewport" content="width=device-width">
+</head>
+<body>
+    <div class="container">
+        <h1>Search Results for "{{ search_query }}"</h1>
+        {% if results %}
+            {% for num, filename, url, matched_lines, ratio in results %}
+                <a class="result-link" href="{{ url }}">
+                    <h2>{{ num }}. {{ filename }} ({{ (ratio * 1000)|round(1) }}‰, {{ matched_lines|length }} occurrences)</h2>
+                </a>
+                <pre>{% for line in matched_lines %}{{ line }}<br>{% endfor %}</pre>
+            {% endfor %}
+        {% else %}
+            <p class="no-results">No results found for "{{ search_query }}".</p>
+        {% endif %}
+        <a class="results-link" href="/">Back to search</a>
+    </div>
+</body>
+</html>
+
