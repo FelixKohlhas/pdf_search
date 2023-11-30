@@ -6,8 +6,16 @@ import argparse
 
 app = Flask(__name__)
 
-def preprocess_search_query(search_query):
-    search_query = search_query.replace('*', '%').replace('?', '_')
+def convert_search_query_sql(search_query):
+    search_query = search_query.replace('*', '%')
+    search_query = search_query.replace('?', '_')
+    return search_query
+
+def convert_search_query_regex(search_query):
+    search_query = search_query.replace('*', '.*')
+    search_query = search_query.replace('%', '.*')
+    search_query = search_query.replace('?', '.')
+    search_query = search_query.replace('_', '.')
     return search_query
 
 def calculate_ratio(matches, text_length):
@@ -16,10 +24,10 @@ def calculate_ratio(matches, text_length):
     return matches / text_length
 
 def search_database(db_name, search_query):
-    search_query = preprocess_search_query(search_query)
     conn = sqlite3.connect(db_name)
     c = conn.cursor()
-    c.execute("SELECT filename, relative_path, text FROM pdf_text WHERE LOWER(text) LIKE LOWER(?)", ('%'+search_query+'%',))
+    sql_search_query = convert_search_query_sql(search_query)
+    c.execute("SELECT filename, relative_path, text FROM pdf_text WHERE LOWER(text) LIKE LOWER(?)", ('%' + sql_search_query + '%',))
     results = c.fetchall()
     conn.close()
 
@@ -38,11 +46,12 @@ def search_database(db_name, search_query):
     return results_with_ratio
 
 def print_matched_lines(file_text, search_query):
-    search_query = preprocess_search_query(search_query)
+    search_query_regex = convert_search_query_regex(search_query)
+
     lines = file_text.split('\n')
     matched_lines = []
     for line in lines:
-        if re.search(search_query, line, re.IGNORECASE):
+        if re.search(search_query_regex, line, re.IGNORECASE):
             matched_lines.append(line)
     return matched_lines
 
