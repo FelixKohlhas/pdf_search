@@ -33,7 +33,10 @@ def create_database(db_name):
 def insert_text_into_database(db_name, filename, relative_path, text, last_modified):
     conn = sqlite3.connect(db_name)
     c = conn.cursor()
-    c.execute('INSERT INTO pdf_text (filename, relative_path, text, last_modified) VALUES (?, ?, ?, ?)', (filename, relative_path, text, last_modified))
+    try:
+        c.execute('INSERT INTO pdf_text (filename, relative_path, text, last_modified) VALUES (?, ?, ?, ?)', (filename, relative_path, text, last_modified))
+    except:
+        pass
     conn.commit()
     conn.close()
 
