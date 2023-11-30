@@ -9,10 +9,21 @@
     <div class="container">
         <h1>Search Results for "{{ search_query }}"</h1>
         {% if results %}
-            {% for num, filename, url, matched_lines, ratio in results %}
-                <a class="result-link" href="{{ url }}">
+            {% for num, filename, relative_path, url_prefix, matched_lines, ratio in results %}
+                <a class="result-link" href="{{ url_prefix + relative_path }}">
                     <h2>{{ num }}. {{ filename }} ({{ (ratio * 1000)|round(1) }}‰, {{ matched_lines|length }} occurrences)</h2>
                 </a>
+
+                {% set components = relative_path.split('/')[:-1] %}
+
+                {% for component in components %}
+                    <a class="path-link" href="{{ url_prefix + '/'.join(components[:loop.index]) }}">
+                    {{ component }}
+                    </a>
+                    {% if not loop.last %}
+                        /
+                    {% endif %}
+                {% endfor %}
                 <pre>{% for line in matched_lines %}{{ line }}<br>{% endfor %}</pre>
             {% endfor %}
         {% else %}

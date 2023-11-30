@@ -66,9 +66,7 @@ def search_form():
         if search_result:
             results = []
             for i, (filename, relative_path, matched_lines, ratio) in enumerate(search_result, start=1):
-                # Update the relative path to the base URL
-                url = url_prefix + relative_path
-                results.append((i, filename, url, matched_lines, ratio))
+                results.append((i, filename, relative_path, url_prefix, matched_lines, ratio))
             return render_template("results.html", search_query=search_query, results=results)
         else:
             return render_template("no_results.html", search_query=search_query)
