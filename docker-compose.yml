@@ -1,0 +1,8 @@
+services:
+  pdf_search:
+    build:
+      context: .
+    stop_signal: SIGINT
+    ports:
+      - '5001:5001'
+    # command: app.py --url-prefix "https://..."
